@@ -4,11 +4,12 @@ import cv2
 import pyautogui
 import time
 
-gameCoords = [2034, 67, 2057, 92]
+gameCoords = [2018, 67, 2069, 121]
 start_time = 0
 
 quant_pescas = 0
 tempo_pesca = 0
+
 
 def iniciarPesca():
     global start_time
@@ -17,6 +18,7 @@ def iniciarPesca():
     time.sleep(0.5)
     pyautogui.click(2045, 80)
     start_time = time.time()
+
 
 def pescar():
     global start_time
@@ -34,6 +36,7 @@ def pescar():
     start_time = time.time()
     contabilizarTempoPesca(tempo)
 
+
 def contabilizarTempoPesca(tempo):
     global quant_pescas, tempo_pesca
     quant_pescas += 1
@@ -42,17 +45,21 @@ def contabilizarTempoPesca(tempo):
     print("Quantidade de pescas: " + str(quant_pescas))
     print("Tempo medio entre pescas: " + str(tempo_pesca/quant_pescas))
 
+
+time.sleep(3)
 iniciarPesca()
 
 while True:
     time.sleep(0.5)
     try:
         screen = np.array(ImageGrab.grab(bbox=gameCoords))
-        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-        pescar()
-        time.sleep(3)
+        #screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
+        if screen.sum() > 800000:
+            pescar()
+            time.sleep(3)
 
-    except:
+    except Exception as e:
         if (time.time() - start_time) > 20:
             iniciarPesca()
+        print(e)
         pass
